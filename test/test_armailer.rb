@@ -1,11 +1,16 @@
 require 'test/unit'
 require 'action_mailer'
-require 'action_mailer/ar_mailer'
+
+require 'rubygems'
+require 'activesupport'
+
+module Rails; end unless defined?(Rails)
+require 'ar_mailer'
 
 ##
 # Pretend mailer
 
-class Mailer < ActionMailer::ARMailer
+class Mailer < ActionMailer::Base
 
   def mail
     @mail = Object.new
@@ -19,7 +24,7 @@ end
 class TestARMailer < Test::Unit::TestCase
 
   def setup
-    Mailer.email_class = Email
+    ActionMailer::Base.email_class = Email
 
     Email.records.clear
     Mail.records.clear

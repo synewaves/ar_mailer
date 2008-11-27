@@ -65,34 +65,31 @@ require 'action_mailer'
 # If you want to set the ActiveRecord model that emails will be stored in,
 # see ActionMailer::ARMailer::email_class=
 
-class ActionMailer::ARMailer < ActionMailer::Base
-
-  @@email_class = Email
-
-  ##
-  # Current email class for deliveries.
-
-  def self.email_class
-    @@email_class
-  end
-
-  ##
-  # Sets the email class for deliveries.
-
-  def self.email_class=(klass)
-    @@email_class = klass
-  end
-
-  ##
-  # Adds +mail+ to the Email table.  Only the first From address for +mail+ is
-  # used.
-
-  def perform_delivery_activerecord(mail)
-    mail.destinations.each do |destination|
-      @@email_class.create :mail => mail.encoded, :to => destination,
-                           :from => mail.from.first
+module ActionMailer
+  module ARMailer
+    
+    def self.included(base)
+      base.send(:cattr_accessor, :email_class)
+      base.send(:cattr_accessor, :email_class_name)
+      base.email_class_name = 'Email'
+      base.extend ClassMethods
     end
+
+    module ClassMethods
+      def email_class
+        @email_class ||= email_class_name.constantize 
+      end
+    end
+    
+    ##
+    # Adds +mail+ to the Email table.  Only the first From address for +mail+ is
+    # used.
+    def perform_delivery_activerecord(mail)
+      mail.destinations.each do |destination|
+        self.class.email_class.create :mail => mail.encoded,
+            :to => destination, :from => mail.from.first
+      end
+    end
+    
   end
-
 end
-
