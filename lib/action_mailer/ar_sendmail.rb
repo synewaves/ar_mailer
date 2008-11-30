@@ -1,6 +1,5 @@
 require 'optparse'
 require 'net/smtp'
-require 'smtp_tls'
 require 'rubygems'
 
 class Object # :nodoc:
@@ -437,16 +436,18 @@ end
 
   def deliver(emails)
     user = smtp_settings[:user] || smtp_settings[:user_name]
-    Net::SMTP.start smtp_settings[:address], smtp_settings[:port],
-                    smtp_settings[:domain], user,
-                    smtp_settings[:password],
-                    smtp_settings[:authentication],
-                    smtp_settings[:tls] do |smtp|
+    
+    smtp = Net::SMTP.new(smtp_settings[:address], smtp_settings[:port])
+    smtp.enable_starttls_auto if smtp.respond_to?(:enable_starttls_auto)
+    smtp.start smtp_settings[:domain], user,
+        smtp_settings[:password],
+        smtp_settings[:authentication] do |session|
+      
       @failed_auth_count = 0
       until emails.empty? do
         email = emails.shift
         begin
-          res = smtp.send_message email.mail, email.from, email.to
+          res = session.send_message email.mail, email.from, email.to
           email.destroy
           log "sent email %011d from %s to %s: %p" %
                 [email.id, email.from, email.to, res]
@@ -454,7 +455,7 @@ end
           log "5xx error sending email %d, removing from queue: %p(%s):\n\t%s" %
                 [email.id, e.message, e.class, e.backtrace.join("\n\t")]
           email.destroy
-          smtp.reset
+          session.reset
         rescue Net::SMTPServerBusy => e
           log "server too busy, sleeping #{@delay} seconds"
           sleep delay
@@ -464,7 +465,7 @@ end
           email.save rescue nil
           log "error sending email %d: %p(%s):\n\t%s" %
                 [email.id, e.message, e.class, e.backtrace.join("\n\t")]
-          smtp.reset
+          session.reset
         end
       end
     end
