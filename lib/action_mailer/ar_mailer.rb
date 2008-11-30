@@ -69,7 +69,7 @@ module ActionMailer
   module ARMailer
     
     def self.included(base)
-      base.send(:cattr_accessor, :email_class)
+      #base.send(:cattr_accessor, :email_class)
       base.send(:cattr_accessor, :email_class_name)
       base.email_class_name = 'Email'
       base.extend ClassMethods
@@ -77,7 +77,7 @@ module ActionMailer
 
     module ClassMethods
       def email_class
-        @email_class ||= email_class_name.constantize 
+        email_class_name.constantize 
       end
     end
     
