@@ -1,22 +1,12 @@
 = ar_mailer
 
-A two-phase delivery agent for ActionMailer
+A two-phase delivery agent for ActionMailer.  This fork of the ar_mailer gem is a setup-friendlier version of the original created Eric Hodel.
 
-Rubyforge Project:
+Alternative versions of this gem:
 
-http://rubyforge.org/projects/seattlerb
+* http://rubyforge.org/projects/seattlerb (The Original)
+* http://github.com/adzap/ar_mailer/wikis
 
-Documentation:
-
-http://seattlerb.org/ar_mailer
-
-and for forked additions
-
-http://github.com/adzap/ar_mailer/wikis
-
-Bugs:
-
-http://rubyforge.org/tracker/?func=add&group_id=1513&atid=5921
 
 == About
 
@@ -24,24 +14,26 @@ Even delivering email to the local machine may take too long when you have to
 send hundreds of messages.  ar_mailer allows you to store messages into the
 database for later delivery by a separate process, ar_sendmail.
 
-== Installing ar_mailer (forked)
 
-Install the gem from GitHub gems server:
+== Installing ar_mailer
 
-First, if you haven't already
+Add this to your environment.rb:
+
+  config.gem 'cyu-ar_mailer', :version => '1.4.4', :lib => 'ar_mailer', :source => 'http://gems.github.com'
+
+And install the gem using rake:
+
+  $ sudo rake gems:install
+
+Alternatively, you do a manual install:
 
   $ sudo gem sources -a http://gems.github.com
-
-Then
-
-  $ sudo gem install adzap-ar_mailer
+  $ sudo gem install cyu-ar_mailer
 
 See ActionMailer::ARMailer for instructions on converting to ARMailer.
 
 See ar_sendmail -h for options to ar_sendmail.
 
-NOTE: You may need to delete an smtp_tls.rb file if you have one lying
-around.  ar_mailer supplies it own.
 
 === init.d/rc.d scripts
 
