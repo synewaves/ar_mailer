@@ -24,18 +24,6 @@ require 'action_mailer'
 # You'll need to redirect this into a file.  If you want a different name
 # provide the --table-name option.
 #
-# Change your email classes to inherit from ActionMailer::ARMailer instead of
-# ActionMailer::Base:
-#
-#   --- app/model/emailer.rb.orig   2006-08-10 13:16:33.000000000 -0700
-#   +++ app/model/emailer.rb        2006-08-10 13:16:43.000000000 -0700
-#   @@ -1,4 +1,4 @@
-#   -class Emailer < ActionMailer::Base
-#   +class Emailer < ActionMailer::ARMailer
-#    
-#   def comment_notification(comment)
-#     from comment.author.email
-#
 # You'll need to be sure to set the From address for your emails.  Something
 # like:
 #
