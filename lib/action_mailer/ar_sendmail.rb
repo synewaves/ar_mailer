@@ -463,8 +463,7 @@ end
           email.destroy
           session.reset
         rescue Net::SMTPServerBusy => e
-          log "server too busy, sleeping #{@delay} seconds"
-          sleep delay
+          log "server too busy, stopping delivery cycle"
           return
         rescue Net::SMTPUnknownError, Net::SMTPSyntaxError, TimeoutError => e
           email.last_send_attempt = Time.now.to_i
@@ -534,14 +533,13 @@ end
     install_signal_handlers
 
     loop do
-      now = Time.now
       begin
         cleanup
         deliver find_emails
       rescue ActiveRecord::Transactions::TransactionError
       end
       break if @once
-      sleep @delay if now + @delay > Time.now
+      sleep @delay
     end
   end
 
