@@ -470,7 +470,7 @@ end
           email.save rescue nil
           log "error sending email %d: %p(%s):\n\t%s" %
                 [email.id, e.message, e.class, e.backtrace.join("\n\t")]
-          session.reset
+          return
         end
       end
     end
