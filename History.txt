@@ -1,3 +1,7 @@
+= 1.47
+
+* Removed TLS settings and TLS auto start
+
 = 1.4.4
 
 * Exit init.d script with message if no mailers defined.

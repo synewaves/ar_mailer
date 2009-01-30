@@ -438,12 +438,6 @@ end
     user = smtp_settings[:user] || smtp_settings[:user_name]
     
     smtp = Net::SMTP.new(smtp_settings[:address], smtp_settings[:port])
-    
-    if smtp_settings[:tls]
-      smtp.enable_starttls
-    elsif smtp.respond_to?(:enable_starttls_auto)
-      smtp.enable_starttls_auto
-    end 
         
     smtp.start smtp_settings[:domain], user,
         smtp_settings[:password],
