@@ -19,7 +19,7 @@ database for later delivery by a separate process, ar_sendmail.
 
 Add this to your environment.rb:
 
-  config.gem 'cyu-ar_mailer', :version => '1.4.4', :lib => 'ar_mailer', :source => 'http://gems.github.com'
+  config.gem 'synewaves-ar_mailer', :version => '1.4.7', :lib => 'ar_mailer', :source => 'http://gems.github.com'
 
 And install the gem using rake:
 
@@ -28,7 +28,7 @@ And install the gem using rake:
 Alternatively, you do a manual install:
 
   $ sudo gem sources -a http://gems.github.com
-  $ sudo gem install cyu-ar_mailer
+  $ sudo gem install synewaves-ar_mailer
 
 See ActionMailer::ARMailer for instructions on converting to ARMailer.
 
