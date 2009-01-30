@@ -53,7 +53,7 @@ class ActionMailer::ARSendmail
   ##
   # The version of ActionMailer::ARSendmail you are running.
 
-  VERSION = '1.4.6'
+  VERSION = '1.4.7'
 
   ##
   # Maximum number of times authentication will be consecutively retried
@@ -435,13 +435,16 @@ end
   # Delivers +emails+ to ActionMailer's SMTP server and destroys them.
 
   def deliver(emails)
+    return if emails.empty?
+    
     user = smtp_settings[:user] || smtp_settings[:user_name]
     
-    smtp = Net::SMTP.new(smtp_settings[:address], smtp_settings[:port])
+    smtp = Net::SMTP.new(smtp_settings[:address], smtp_settings[:port])    
         
     smtp.start smtp_settings[:domain], user,
         smtp_settings[:password],
-        smtp_settings[:authentication] do |session|
+        smtp_settings[:authentication],
+        smtp_settings[:tls] do |session|
       
       @failed_auth_count = 0
       until emails.empty? do
@@ -515,8 +518,9 @@ end
   # Logs +message+ if verbose
 
   def log(message)
+    message = "ar_sendmail #{Time.now}: #{message}"
     $stderr.puts message if @verbose
-    ActionMailer::Base.logger.info "ar_sendmail: #{message}"
+    ActionMailer::Base.logger.info(message)
   end
 
   ##
